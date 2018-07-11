@@ -2,39 +2,26 @@ package io.galaxyonline;
 
 import io.socket.client.IO;
 import io.socket.client.Socket;
-import io.socket.emitter.Emitter;
 
 public class Main {
     public static void main(String[] args) {
         try {
-            Socket socket = IO.socket("http://localhost:8000");
-            socket.on(Socket.EVENT_CONNECT, new Emitter.Listener() {
-
-                @Override
-                public void call(Object... args) {
-                    System.out.println("client connected");
-                    socket.emit("foo", "hi");
-                    socket.disconnect();
-                }
-
-            }).on("event", new Emitter.Listener() {
-
-                @Override
-                public void call(Object... args) {
-                }
-
-            }).on(Socket.EVENT_DISCONNECT, new Emitter.Listener() {
-
-
-                @Override
-                public void call(Object... args) {
-                    System.out.println("client disconnected");
-                }
-
+            Socket socket = IO.socket("http://127.0.0.1:8888");
+            socket.on(Socket.EVENT_CONNECT, (objects) -> {
+                System.out.println("client connected");
+            }).on(Socket.EVENT_DISCONNECT, (objects) -> {
+                System.out.println("client disconnected");
+            }).on("packetevent", (objects) -> {
+                System.out.println("received 1");
+                System.out.println(objects);
+            }).on(Socket.EVENT_MESSAGE, objects -> {
+                System.out.println("received 2");
+                System.out.println(objects);
             });
+
             socket.connect();
-            socket.send("test");
-        } catch(Exception e) {
+            socket.send("packetevent", "test1234");
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }

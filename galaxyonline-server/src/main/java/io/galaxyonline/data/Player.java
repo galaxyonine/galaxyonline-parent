@@ -1,17 +1,13 @@
 package io.galaxyonline.data;
 
 import com.corundumstudio.socketio.SocketIOClient;
-import com.corundumstudio.socketio.protocol.Packet;
 import io.galaxyonline.GameServer;
 import io.galaxyonline.data.entity.Entity;
 import io.galaxyonline.data.entity.SpaceShip;
-import io.galaxyonline.packet.PacketType;
-import io.netty.buffer.Unpooled;
+import io.galaxyonline.packet.PacketEvent;
 import lombok.Getter;
 import lombok.Setter;
 import org.json.simple.JSONObject;
-
-import java.nio.charset.Charset;
 
 public class Player {
     private GameServer server;
@@ -30,14 +26,14 @@ public class Player {
     public void updatePlayerData() {
         //SEND ALL DATA TO PLAYER
         JSONObject json = new JSONObject();
-        json.put("type", PacketType.PLAYER_UPDATE.toString());
+        json.put("type", PacketEvent.PLAYER_UPDATE.toString());
         JSONObject playerData = new JSONObject();
         SpaceShip ship = server.getWorld().getPlayerShip(this);
         if (ship != null) {
             playerData.put("ship", ship.toJSON());
         }
         json.put("playerdata", playerData);
-        session.sendEvent(PacketType.PLAYER_UPDATE.toString(), json.toJSONString());
+        session.sendEvent(PacketEvent.PLAYER_UPDATE.toString(), json.toJSONString());
     }
 
     public void updatePlayerWorld() {
@@ -53,6 +49,6 @@ public class Player {
             count++;
         }
         json.put("world", world);
-        session.sendEvent(PacketType.WORLD_UPDATE.toString(), json.toJSONString());
+        session.sendEvent(PacketEvent.WORLD_UPDATE.toString(), json.toJSONString());
     }
 }

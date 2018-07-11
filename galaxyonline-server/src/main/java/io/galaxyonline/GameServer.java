@@ -4,6 +4,7 @@ import com.corundumstudio.socketio.Configuration;
 import com.corundumstudio.socketio.SocketIOServer;
 import io.galaxyonline.data.Player;
 import io.galaxyonline.data.World;
+import io.galaxyonline.packet.PacketEvent;
 import lombok.Getter;
 
 import java.util.ArrayList;
@@ -39,11 +40,9 @@ public class GameServer {
 
     private void startServer(int port) {
         if (server != null) server.stop();
-        GameServer gameServer = this;
 
         Configuration config = new Configuration();
         config.setPort(port);
-
         server = new SocketIOServer(config);
 
         server.addConnectListener((session) -> {
@@ -60,9 +59,9 @@ public class GameServer {
             }
         });
 
-        server.addEventListener("packetevent", Object.class, (socketIOClient, object, ackRequest) -> {
+        server.addEventListener("packetevent", Object.class, (socketIOClient, string, ackRequest) -> {
+            System.out.println(string);
             socketIOClient.sendEvent("packetevent", "pong");
-            System.out.println(object);
         });
 
         System.out.println("Server Starting");
