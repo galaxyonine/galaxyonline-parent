@@ -24,14 +24,14 @@
     <dependencies>
         <!-- SCALECUBE SOCKET IO REQUIREMENTS -->
         <dependency>
-            <groupId>io.scalecube</groupId>
-            <artifactId>socketio</artifactId>
-            <version>2.3.4</version>
+            <groupId>com.corundumstudio.socketio</groupId>
+            <artifactId>netty-socketio</artifactId>
+            <version>1.7.12</version>
         </dependency>
         <dependency>
             <groupId>io.netty</groupId>
-            <artifactId>netty-buffer</artifactId>
-            <version>4.1.26.Final</version>
+            <artifactId>netty-all</artifactId>
+            <version>4.0.9.Final</version>
         </dependency>
 
         <dependency>

@@ -1,16 +1,15 @@
 package io.galaxyonline;
 
+import com.corundumstudio.socketio.Configuration;
+import com.corundumstudio.socketio.SocketIOServer;
 import io.galaxyonline.data.Player;
 import io.galaxyonline.data.World;
-import io.netty.buffer.ByteBuf;
-import io.scalecube.socketio.Session;
-import io.scalecube.socketio.SocketIOListener;
-import io.scalecube.socketio.SocketIOServer;
 import lombok.Getter;
 
 import java.util.ArrayList;
 
 public class GameServer {
+    @Getter
     private SocketIOServer server;
     private int port;
 
@@ -35,32 +34,37 @@ public class GameServer {
 
     public void stop() {
         if (gameThread != null && gameThread.isAlive()) gameThread.interrupt();
-        if (server != null && !server.isStopped()) server.stop();
+        if (server != null) server.stop();
     }
 
     private void startServer(int port) {
-        if (server != null && !server.isStopped()) server.stop();
+        if (server != null) server.stop();
         GameServer gameServer = this;
-        server = SocketIOServer.newInstance(port);
-        server.setListener(new SocketIOListener() {
-            public void onConnect(Session session) {
-                System.out.println("Connected: " + session);
-                Player player = new Player(gameServer, session, "Anonymous");
-                players.add(player);
-            }
 
-            public void onDisconnect(Session session) {
-                System.out.println("Disconnected: " + session);
-                for (Player player : players) {
-                    if (player.getSession().equals(session)) players.remove(player);
-                }
-            }
+        Configuration config = new Configuration();
+        config.setPort(port);
 
-            @Override
-            public void onMessage(Session session, ByteBuf byteBuf) {
-                System.out.println(byteBuf.toString());
+        server = new SocketIOServer(config);
+
+        server.addConnectListener((session) -> {
+            System.out.println("Connected " + session.getRemoteAddress());
+            Player player = new Player(this, session, "Anonymous");
+            players.add(player);
+        });
+
+        server.addDisconnectListener((session) -> {
+            System.out.println("Disconnected " + session.getRemoteAddress());
+            for(int i = players.size() - 1; i >= 0; i--) {
+                Player player = players.get(i);
+                if(player.getSession().equals(session)) players.remove(i);
             }
         });
+
+        server.addEventListener("packetevent", Object.class, (socketIOClient, object, ackRequest) -> {
+            socketIOClient.sendEvent("packetevent", "pong");
+            System.out.println(object);
+        });
+
         System.out.println("Server Starting");
         server.start();
         System.out.println("Server Started");
