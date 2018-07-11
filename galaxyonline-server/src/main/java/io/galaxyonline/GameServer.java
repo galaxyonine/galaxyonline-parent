@@ -6,6 +6,7 @@ import io.netty.buffer.ByteBuf;
 import io.scalecube.socketio.Session;
 import io.scalecube.socketio.SocketIOListener;
 import io.scalecube.socketio.SocketIOServer;
+import lombok.Getter;
 
 import java.util.ArrayList;
 
@@ -13,7 +14,9 @@ public class GameServer {
     private SocketIOServer server;
     private int port;
 
+    @Getter
     private ArrayList<Player> players;
+    @Getter
     private World world;
 
     private Thread gameThread;
@@ -21,6 +24,8 @@ public class GameServer {
 
     public GameServer(int port) {
         this.port = port;
+        world = new World(this);
+        players = new ArrayList<>();
     }
 
     public void start() {
@@ -35,11 +40,12 @@ public class GameServer {
 
     private void startServer(int port) {
         if (server != null && !server.isStopped()) server.stop();
+        GameServer gameServer = this;
         server = SocketIOServer.newInstance(port);
         server.setListener(new SocketIOListener() {
             public void onConnect(Session session) {
                 System.out.println("Connected: " + session);
-                Player player = new Player(session, "Anonymous");
+                Player player = new Player(gameServer, session, "Anonymous");
                 players.add(player);
             }
 
@@ -52,10 +58,12 @@ public class GameServer {
 
             @Override
             public void onMessage(Session session, ByteBuf byteBuf) {
-
+                System.out.println(byteBuf.toString());
             }
         });
+        System.out.println("Server Starting");
         server.start();
+        System.out.println("Server Started");
     }
 
     private void startGameThread() {
@@ -74,5 +82,6 @@ public class GameServer {
                 e.printStackTrace();
             }
         });
+        gameThread.start();
     }
 }

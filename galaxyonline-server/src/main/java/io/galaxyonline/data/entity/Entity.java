@@ -1,10 +1,12 @@
 package io.galaxyonline.data.entity;
 
 import io.galaxyonline.data.Location;
+import io.galaxyonline.json.JSONable;
 import lombok.Getter;
 import lombok.Setter;
+import org.json.simple.JSONObject;
 
-public abstract class Entity {
+public abstract class Entity implements JSONable {
     @Getter
     @Setter
     private Location location;
@@ -33,6 +35,25 @@ public abstract class Entity {
     public void tickEvent() {
     }
 
-    public void collideEvent(Entity e){
+    public void collideEvent(Entity e) {
+    }
+
+    @Override
+    public JSONObject toJSON() {
+        JSONObject json = new JSONObject();
+        json.put("type", getClass().getSimpleName());
+        json.put("location", location.toJSON());
+        json.put("angle", angle);
+        return json;
+    }
+
+    @Override
+    public JSONable fromJSON(JSONObject json) {
+        String type = (String) json.get("type");
+        if (type.equals(getClass().getSimpleName())) {
+            location.fromJSON((JSONObject) json.get("location"));
+            angle = (double) json.get("angle");
+        }
+        return null;
     }
 }

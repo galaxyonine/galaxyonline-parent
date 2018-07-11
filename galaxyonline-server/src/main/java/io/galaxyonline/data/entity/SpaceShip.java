@@ -3,6 +3,7 @@ package io.galaxyonline.data.entity;
 import io.galaxyonline.data.Location;
 import io.galaxyonline.data.Player;
 import lombok.Getter;
+import org.json.simple.JSONObject;
 
 public class SpaceShip extends Damageable {
     @Getter
@@ -16,5 +17,17 @@ public class SpaceShip extends Damageable {
     public SpaceShip(Player owner, Location location) {
         super(location, SHIP_SIZE, SHIP_HEALTH);
         this.owner = owner;
+    }
+
+    private void shoot() {
+        Bullet bullet = new Bullet(this, location);
+        location.getWorld().addEntity(bullet);
+    }
+
+    @Override
+    public JSONObject toJSON() {
+        JSONObject json = super.toJSON();
+        json.put("owner", owner.getUsername());
+        return json;
     }
 }

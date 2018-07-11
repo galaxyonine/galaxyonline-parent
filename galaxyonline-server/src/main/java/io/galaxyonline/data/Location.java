@@ -1,9 +1,11 @@
 package io.galaxyonline.data;
 
+import io.galaxyonline.json.JSONable;
 import lombok.Getter;
 import lombok.Setter;
+import org.json.simple.JSONObject;
 
-public class Location {
+public class Location implements JSONable {
     @Getter
     private World world;
     @Getter
@@ -35,5 +37,20 @@ public class Location {
         double newX = (location.x + distance * Math.cos(rad));
         double newY = (location.y + distance * Math.sin(rad));
         return new Location(world, newX, newY);
+    }
+
+    @Override
+    public JSONObject toJSON() {
+        JSONObject json = new JSONObject();
+        json.put("x", x);
+        json.put("y", y);
+        return json;
+    }
+
+    @Override
+    public JSONable fromJSON(JSONObject json) {
+        x = (double) json.get("x");
+        y = (double) json.get("y");
+        return this;
     }
 }

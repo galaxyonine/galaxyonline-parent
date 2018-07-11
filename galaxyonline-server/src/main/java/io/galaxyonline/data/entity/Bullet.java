@@ -18,12 +18,12 @@ public class Bullet extends Entity {
     @Override
     public void tickEvent() {
         setLocation(getLocation().translate(getLocation(), BULLET_SPEED, getAngle()));
-        if(!getLocation().getWorld().contains(getLocation())) {
+        if (!getLocation().getWorld().contains(getLocation())) {
             getLocation().getWorld().removeEntity(this);
         }
 
-        for(Entity entity : getLocation().getWorld().getEntities()) {
-            if(collides(entity)) {
+        for (Entity entity : getLocation().getWorld().getEntities()) {
+            if (collides(entity)) {
                 collideEvent(entity);
             }
         }
@@ -31,7 +31,7 @@ public class Bullet extends Entity {
 
     @Override
     public void collideEvent(Entity entity) {
-        if(entity instanceof Damageable) {
+        if (entity instanceof Damageable) {
             Damageable damageable = (Damageable) entity;
             damageable.damage(BULLET_DAMAGE);
         }
