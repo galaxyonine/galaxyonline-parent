@@ -39,16 +39,16 @@ public class Player {
     public void updatePlayerWorld() {
         //SEND ALL ENTITIES TO PLAYER
         JSONObject json = new JSONObject();
-        JSONObject world = new JSONObject();
+        JSONObject entities = new JSONObject();
         int count = 0;
         for (Entity e : server.getWorld().getEntities()) {
             if (e instanceof SpaceShip) {
                 if (((SpaceShip) e).getOwner().equals(this)) continue;
             }
-            world.put("ent" + count, e.toJSON());
+            entities.put(count, e.toJSON());
             count++;
         }
-        json.put("world", world);
+        json.put("entities", entities);
         session.sendEvent(PacketEvent.WORLD_UPDATE.toString(), json.toJSONString());
     }
 }
