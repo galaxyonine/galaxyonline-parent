@@ -27,7 +27,6 @@ public class Player {
     public void updatePlayerData() {
         //SEND ALL DATA TO PLAYER
         JSONObject json = new JSONObject();
-        json.put("type", PacketEvent.PLAYER_UPDATE.toString());
         JSONObject playerData = new JSONObject();
         SpaceShip ship = server.getWorld().getPlayerShip(this);
         if (ship != null) {
@@ -40,6 +39,7 @@ public class Player {
     public void updatePlayerWorld() {
         //SEND ALL ENTITIES TO PLAYER
         JSONObject json = new JSONObject();
+        JSONObject world = new JSONObject();
         JSONObject entities = new JSONObject();
         int count = 0;
         for (Entity e : server.getWorld().getEntities()) {
@@ -49,7 +49,8 @@ public class Player {
             entities.put(count, e.toJSON());
             count++;
         }
-        json.put("entities", entities);
+        world.put("entities", entities);
+        json.put("world", world);
         session.sendEvent(PacketEvent.WORLD_UPDATE.toString(), json.toJSONString());
     }
 

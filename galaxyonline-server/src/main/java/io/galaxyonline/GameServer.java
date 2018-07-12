@@ -5,8 +5,12 @@ import com.corundumstudio.socketio.SocketIOClient;
 import com.corundumstudio.socketio.SocketIOServer;
 import io.galaxyonline.data.Player;
 import io.galaxyonline.data.World;
+import io.galaxyonline.data.entity.SpaceShip;
 import io.galaxyonline.packet.PacketEvent;
 import lombok.Getter;
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
 
 import java.util.ArrayList;
 
@@ -71,11 +75,31 @@ public class GameServer {
         server.addEventListener(PacketEvent.PLAYER_MOVE.toString(), Object.class, (session, string, ackRequest) -> {
             System.out.println(PacketEvent.PLAYER_MOVE);
             System.out.println(string);
+            try {
+                JSONParser parser = new JSONParser();
+                JSONObject json = (JSONObject) parser.parse((String) string);
+                Player player = getPlayerFromSession(session);
+                if(player != null) {
+                    SpaceShip ship = world.getPlayerShip(player);
+                    if(ship != null) {
+                        ship.getLocation().fromJSON(json);
+                    }
+                }
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
         });
 
         server.addEventListener(PacketEvent.PLAYER_SHOOT.toString(), Object.class, (session, string, ackRequest) -> {
             System.out.println(PacketEvent.PLAYER_SHOOT);
             System.out.println(string);
+            Player player = getPlayerFromSession(session);
+            if(player != null) {
+                SpaceShip ship = world.getPlayerShip(player);
+                if (ship != null) {
+                    ship.shoot();
+                }
+            }
         });
 
         System.out.println("Server Starting");

@@ -1,6 +1,7 @@
 package io.galaxyonline.data.entity;
 
 import io.galaxyonline.data.Location;
+import io.galaxyonline.data.World;
 import org.json.simple.JSONObject;
 
 public class Bullet extends Entity {
@@ -10,8 +11,8 @@ public class Bullet extends Entity {
         super(location, BULLET_SIZE, shooter.getAngle());
     }
 
-    public Bullet() {
-        super(null, 0, 0);
+    public Bullet(World world) {
+        super(new Location(world, 0, 0), BULLET_SIZE, 0);
     }
 
     @Override

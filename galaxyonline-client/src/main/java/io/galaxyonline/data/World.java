@@ -6,6 +6,7 @@ import io.galaxyonline.data.entity.Entity;
 import io.galaxyonline.data.entity.SpaceShip;
 import io.galaxyonline.json.JSONable;
 import lombok.Getter;
+import lombok.Setter;
 import org.json.simple.JSONObject;
 
 import java.util.ArrayList;
@@ -16,10 +17,11 @@ public class World implements JSONable {
     @Getter
     private ArrayList<Entity> entities;
     @Getter
+    @Setter
     private SpaceShip playerShip;
 
-    private static final int WORLD_WIDTH = 2000;
-    private static final int WORLD_HEIGHT = 2000;
+    private static final int WORLD_WIDTH = 500;
+    private static final int WORLD_HEIGHT = 500;
 
     public World(GameClient gameClient) {
         this.client = gameClient;
@@ -27,9 +29,9 @@ public class World implements JSONable {
     }
 
     public boolean contains(Location location) {
-        if(location.getWorld().equals(this)) {
-            if(location.getX() > 0 && location.getX() < WORLD_WIDTH) {
-                if(location.getY() > 0 && location.getY() < WORLD_WIDTH) {
+        if (location.getWorld().equals(this)) {
+            if (location.getX() > 0 && location.getX() < WORLD_WIDTH) {
+                if (location.getY() > 0 && location.getY() < WORLD_WIDTH) {
                     return true;
                 }
             }
@@ -54,18 +56,21 @@ public class World implements JSONable {
     public JSONable fromJSON(JSONObject json) {
         ArrayList<Entity> entities = new ArrayList<>();
         JSONObject entitiesJSON = (JSONObject) json.get("entities");
-        for(Object key : entitiesJSON.keySet()) {
+        for (Object key : entitiesJSON.keySet()) {
             String keyS = (String) key;
             JSONObject entityJSON = (JSONObject) entitiesJSON.get(keyS);
-            switch((String) entityJSON.get("type")) {
+            switch ((String) entityJSON.get("type")) {
                 case "Bullet":
-                    Bullet bullet = new Bullet().fromJSON(entitiesJSON);
+                    Bullet bullet = new Bullet(this).fromJSON(entityJSON);
+                    entities.add(bullet);
                     break;
                 case "SpaceShip":
-
+                    SpaceShip spaceShip = new SpaceShip(this).fromJSON(entityJSON);
+                    entities.add(spaceShip);
                     break;
             }
         }
+        this.entities = entities;
         return this;
     }
 }

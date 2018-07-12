@@ -13,8 +13,8 @@ public class World {
     @Getter
     private ArrayList<Entity> entities;
 
-    private static final int WORLD_WIDTH = 2000;
-    private static final int WORLD_HEIGHT = 2000;
+    private static final int WORLD_WIDTH = 500;
+    private static final int WORLD_HEIGHT = 500;
 
     public World(GameServer gameServer) {
         this.server = gameServer;

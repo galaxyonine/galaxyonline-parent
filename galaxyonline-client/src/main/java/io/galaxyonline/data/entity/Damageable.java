@@ -1,7 +1,6 @@
 package io.galaxyonline.data.entity;
 
 import io.galaxyonline.data.Location;
-import io.galaxyonline.json.JSONable;
 import lombok.Getter;
 import lombok.Setter;
 import org.json.simple.JSONObject;
@@ -23,8 +22,8 @@ public abstract class Damageable extends Entity {
     @Override
     public Damageable fromJSON(JSONObject json) {
         super.fromJSON(json);
-        health = (int) json.get("health");
-        maxHealth = (int) json.get("maxhealth");
+        health = (double) json.get("health");
+        maxHealth = (double) json.get("maxhealth");
         return this;
     }
 }
