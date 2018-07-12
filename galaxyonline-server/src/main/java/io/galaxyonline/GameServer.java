@@ -1,6 +1,7 @@
 package io.galaxyonline;
 
 import com.corundumstudio.socketio.Configuration;
+import com.corundumstudio.socketio.SocketIOClient;
 import com.corundumstudio.socketio.SocketIOServer;
 import io.galaxyonline.data.Player;
 import io.galaxyonline.data.World;
@@ -59,12 +60,20 @@ public class GameServer {
             }
         });
 
-        server.addEventListener(PacketEvent.PLAYER_MOVE.toString(), Object.class, (socketIOClient, string, ackRequest) -> {
+        server.addEventListener(PacketEvent.PLAYER_SPAWN.toString(), Object.class, (session, string, ackRequest) -> {
+            System.out.println(PacketEvent.PLAYER_SPAWN);
+            System.out.println(string);
+            Player player = getPlayerFromSession(session);
+            player.attemptCreateShip();
+            player.updatePlayerData();
+        });
+
+        server.addEventListener(PacketEvent.PLAYER_MOVE.toString(), Object.class, (session, string, ackRequest) -> {
             System.out.println(PacketEvent.PLAYER_MOVE);
             System.out.println(string);
         });
 
-        server.addEventListener(PacketEvent.PLAYER_SHOOT.toString(), Object.class, (socketIOClient, string, ackRequest) -> {
+        server.addEventListener(PacketEvent.PLAYER_SHOOT.toString(), Object.class, (session, string, ackRequest) -> {
             System.out.println(PacketEvent.PLAYER_SHOOT);
             System.out.println(string);
         });
@@ -91,5 +100,12 @@ public class GameServer {
             }
         });
         gameThread.start();
+    }
+
+    public Player getPlayerFromSession(SocketIOClient session) {
+        for(Player player : players) {
+            if(session.equals(player.getSession())) return player;
+        }
+        return null;
     }
 }

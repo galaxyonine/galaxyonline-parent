@@ -50,10 +50,11 @@ public abstract class Damageable extends Entity {
     }
 
     @Override
-    public JSONable fromJSON(JSONObject json) {
+    public Damageable fromJSON(JSONObject json) {
+        super.fromJSON(json);
         health = (int) json.get("health");
         maxHealth = (int) json.get("maxhealth");
-        return super.fromJSON(json);
+        return this;
     }
 
     public void damageEvent() {

@@ -22,19 +22,19 @@ public class World {
     }
 
     public void tick() {
-        for(Entity entity : entities) {
+        for (Entity entity : entities) {
             entity.tickEvent();
         }
 
-        for(Player player : server.getPlayers()) {
+        for (Player player : server.getPlayers()) {
             player.updatePlayerWorld();
         }
     }
 
     public boolean contains(Location location) {
-        if(location.getWorld().equals(this)) {
-            if(location.getX() > 0 && location.getX() < WORLD_WIDTH) {
-                if(location.getY() > 0 && location.getY() < WORLD_WIDTH) {
+        if (location.getWorld().equals(this)) {
+            if (location.getX() > 0 && location.getX() < WORLD_WIDTH) {
+                if (location.getY() > 0 && location.getY() < WORLD_WIDTH) {
                     return true;
                 }
             }
@@ -43,10 +43,10 @@ public class World {
     }
 
     public SpaceShip getPlayerShip(Player player) {
-        for(Entity entity : entities) {
-            if(entity instanceof SpaceShip) {
+        for (Entity entity : entities) {
+            if (entity instanceof SpaceShip) {
                 SpaceShip ship = (SpaceShip) entity;
-                if(ship.getOwner().equals(player)) return ship;
+                if (ship.getOwner().equals(player)) return ship;
             }
         }
         return null;

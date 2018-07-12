@@ -1,7 +1,9 @@
 package io.galaxyonline.data.entity;
 
 import io.galaxyonline.data.Location;
+import io.galaxyonline.json.JSONable;
 import lombok.Getter;
+import org.json.simple.JSONObject;
 
 public class Bullet extends Entity {
     @Getter
@@ -36,5 +38,11 @@ public class Bullet extends Entity {
             damageable.damage(BULLET_DAMAGE);
             getLocation().getWorld().removeEntity(this);
         }
+    }
+
+    @Override
+    public Bullet fromJSON(JSONObject json) {
+        super.fromJSON(json);
+        return this;
     }
 }

@@ -5,6 +5,7 @@ import io.galaxyonline.GameServer;
 import io.galaxyonline.data.entity.Entity;
 import io.galaxyonline.data.entity.SpaceShip;
 import io.galaxyonline.packet.PacketEvent;
+import io.galaxyonline.util.RNGUtils;
 import lombok.Getter;
 import lombok.Setter;
 import org.json.simple.JSONObject;
@@ -50,5 +51,16 @@ public class Player {
         }
         json.put("entities", entities);
         session.sendEvent(PacketEvent.WORLD_UPDATE.toString(), json.toJSONString());
+    }
+
+    public boolean attemptCreateShip() {
+        if(server.getWorld().getPlayerShip(this) == null) {
+            int x = RNGUtils.randomInt(0, server.getWorld().getWorldWidth());
+            int y = RNGUtils.randomInt(0, server.getWorld().getWorldHeight());
+            Location location = new Location(server.getWorld(), x, y);
+            SpaceShip ship = new SpaceShip(this, location);
+            server.getWorld().addEntity(ship);
+        }
+        return false;
     }
 }
