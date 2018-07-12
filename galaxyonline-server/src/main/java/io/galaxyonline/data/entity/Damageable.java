@@ -33,6 +33,7 @@ public abstract class Damageable extends Entity {
     public void damage(double health) {
         this.health -= health;
         if (this.health < 0) this.health = 0;
+        damageEvent();
     }
 
     public void heal(double health) {
@@ -53,5 +54,8 @@ public abstract class Damageable extends Entity {
         health = (int) json.get("health");
         maxHealth = (int) json.get("maxhealth");
         return super.fromJSON(json);
+    }
+
+    public void damageEvent() {
     }
 }

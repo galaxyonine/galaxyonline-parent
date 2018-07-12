@@ -34,6 +34,7 @@ public class Bullet extends Entity {
         if (entity instanceof Damageable) {
             Damageable damageable = (Damageable) entity;
             damageable.damage(BULLET_DAMAGE);
+            getLocation().getWorld().removeEntity(this);
         }
     }
 }

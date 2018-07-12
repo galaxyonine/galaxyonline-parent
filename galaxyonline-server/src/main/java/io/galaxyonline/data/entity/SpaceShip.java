@@ -25,6 +25,13 @@ public class SpaceShip extends Damageable {
     }
 
     @Override
+    public void damageEvent() {
+        if(owner != null) {
+            owner.updatePlayerData();
+        }
+    }
+
+    @Override
     public JSONObject toJSON() {
         JSONObject json = super.toJSON();
         json.put("owner", owner.getUsername());
