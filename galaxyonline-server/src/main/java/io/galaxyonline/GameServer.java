@@ -59,9 +59,14 @@ public class GameServer {
             }
         });
 
-        server.addEventListener("packetevent", Object.class, (socketIOClient, string, ackRequest) -> {
+        server.addEventListener(PacketEvent.PLAYER_MOVE.toString(), Object.class, (socketIOClient, string, ackRequest) -> {
+            System.out.println(PacketEvent.PLAYER_MOVE);
             System.out.println(string);
-            socketIOClient.sendEvent("packetevent", "pong");
+        });
+
+        server.addEventListener(PacketEvent.PLAYER_SHOOT.toString(), Object.class, (socketIOClient, string, ackRequest) -> {
+            System.out.println(PacketEvent.PLAYER_SHOOT);
+            System.out.println(string);
         });
 
         System.out.println("Server Starting");

@@ -12,15 +12,14 @@ public class Main {
             }).on(Socket.EVENT_DISCONNECT, (objects) -> {
                 System.out.println("client disconnected");
             }).on("packetevent", (objects) -> {
-                System.out.println("received 1");
-                System.out.println(objects);
-            }).on(Socket.EVENT_MESSAGE, objects -> {
-                System.out.println("received 2");
-                System.out.println(objects);
+                System.out.println("Received packet");
+                for (Object o : objects) {
+                    System.out.println("Received: " + o);
+                }
             });
 
             socket.connect();
-            socket.send("packetevent", "test1234");
+            socket.emit("packetevent", "test1234");
         } catch (Exception e) {
             e.printStackTrace();
         }
