@@ -27,7 +27,7 @@ public class GameClient {
     private Socket socket;
 
     private Thread gameThread;
-    private static final int GAME_TPS = 20;
+    private static final int GAME_TPS = 60;
 
     public GameClient(String ip, int port) {
         this.ip = ip;

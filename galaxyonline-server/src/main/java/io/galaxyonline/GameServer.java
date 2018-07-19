@@ -25,7 +25,7 @@ public class GameServer {
     private World world;
 
     private Thread gameThread;
-    private static final int GAME_TPS = 20;
+    private static final int GAME_TPS = 60;
 
     public GameServer(int port) {
         this.port = port;
@@ -60,7 +60,11 @@ public class GameServer {
             System.out.println("Disconnected " + session.getRemoteAddress());
             for(int i = players.size() - 1; i >= 0; i--) {
                 Player player = players.get(i);
-                if(player.getSession().equals(session)) players.remove(i);
+                if(player.getSession().equals(session)) {
+                    players.remove(i);
+                    SpaceShip ship = world.getPlayerShip(player);
+                    if(ship != null) world.removeEntity(ship);
+                }
             }
         });
 

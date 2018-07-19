@@ -1,7 +1,6 @@
 package io.galaxyonline.data.entity;
 
 import io.galaxyonline.data.Location;
-import io.galaxyonline.json.JSONable;
 import lombok.Getter;
 import org.json.simple.JSONObject;
 
